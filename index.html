@@ -31,7 +31,7 @@
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-anchor:none}
 body{
   background-color:var(--ink); color:var(--text); font-family:var(--body); font-size:16px; line-height:1.6;
   background-image:
@@ -982,7 +982,7 @@ function renderLevel(i, animate){
     </div>
   </div>`;
   drawSprite($('#console canvas.spr'));
-  $('#console').querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>selectLevel(+b.dataset.go,{user:true})));
+  $('#console').querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>selectLevel(+b.dataset.go,{user:true,scroll:true})));
   $('#console').querySelectorAll('[data-item]').forEach(b=>b.addEventListener('click',()=>openItem(b.dataset.item,b)));
   const pn = $('#patchNotes'); if(pn) pn.addEventListener('toggle',()=>{ if(pn.open){ award('patch'); sfx.blip(); } });
   if(animate && !reduce) $('#console').querySelectorAll('[data-v]').forEach(countUp);
@@ -1211,6 +1211,14 @@ $('#cvThumb').addEventListener('click',e=>openCV(e.currentTarget));
 $('#cvDl').addEventListener('click',downloadCV);
 $('#cvOpen').addEventListener('click',()=>award('cv'));
 initDownloads(0);
+
+/* ---------- In-page links: scroll without leaving a #hash in the URL ---------- */
+document.addEventListener('click',e=>{
+  const a = e.target.closest && e.target.closest('a[href^="#"]'); if(!a) return;
+  const id = a.getAttribute('href'); if(id.length<2) return;
+  const t = document.querySelector(id); if(!t) return;
+  e.preventDefault(); t.scrollIntoView({behavior:reduce?'auto':'smooth', block:'start'});
+});
 
 /* ---------- Wiring ---------- */
 $('#icoTrophy').innerHTML = icon('trophy');
