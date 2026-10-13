@@ -1072,6 +1072,19 @@ function selectLevel(i,opts){
 }
 
 /* ---------- Story mode ---------- */
+const MAP_BEAT = 2600;
+let glideRaf = null;
+function glideTo(el, dur){
+  if(!el) return;
+  const hud = document.querySelector('.hud'); const off = (hud ? hud.getBoundingClientRect().height : 0) + 14;
+  const target = Math.max(0, el.getBoundingClientRect().top + window.scrollY - off);
+  if(reduce){ window.scrollTo(0, target); return; }
+  cancelAnimationFrame(glideRaf);
+  const start = window.scrollY, dist = target - start, t0 = performance.now();
+  const ease = p => p<.5 ? 2*p*p : 1-Math.pow(-2*p+2,2)/2;
+  const step = now => { const p = Math.min(1,(now-t0)/dur); window.scrollTo(0, start + dist*ease(p)); if(p<1) glideRaf = requestAnimationFrame(step); };
+  glideRaf = requestAnimationFrame(step);
+}
 const story = {on:false, paused:false, i:0, timer:null, raf:null, t0:0, dur:0, left:0};
 function readTime(L){
   let txt = L.story.join(' ');
@@ -1098,7 +1111,13 @@ function startStory(){
 }
 function runStep(fresh){
   clearTimeout(story.timer); cancelAnimationFrame(story.raf);
-  if(fresh){ selectLevel(story.i,{fromStory:true}); story.dur = readTime(LEVELS[story.i]); story.left = story.dur; $('#console').scrollIntoView({behavior:reduce?'auto':'smooth', block:'start'}); }
+  if(fresh){
+    clearTimeout(story.scrollT);
+    glideTo($('#map'), 700);
+    selectLevel(story.i,{fromStory:true});
+    story.dur = readTime(LEVELS[story.i]) + MAP_BEAT; story.left = story.dur;
+    story.scrollT = setTimeout(()=>{ if(story.on && !story.paused) glideTo($('#console'), 1400); }, MAP_BEAT - 400);
+  }
   story.t0 = performance.now();
   setStoryButtons();
   if(story.paused){ $('#sbFill').style.width = ((1-story.left/story.dur)*100)+'%'; return; }
@@ -1113,10 +1132,10 @@ function nextStep(){
 function prevStep(){ if(story.i>0){ story.i--; runStep(true); } }
 function togglePause(){
   if(!story.on) return;
-  if(story.paused){ story.paused = false; runStep(false); }
+  if(story.paused){ story.paused = false; const r=$('#console').getBoundingClientRect(); if(r.top>innerHeight*.6 || r.bottom<0) glideTo($('#console'),900); runStep(false); }
   else { story.paused = true; clearTimeout(story.timer); cancelAnimationFrame(story.raf); story.left = Math.max(0, story.left - (performance.now()-story.t0)); setStoryButtons(); }
 }
-function stopStory(){ story.on=false; story.paused=false; clearTimeout(story.timer); cancelAnimationFrame(story.raf); $('#sbFill').style.width='0'; setStoryButtons(); }
+function stopStory(){ story.on=false; story.paused=false; clearTimeout(story.timer); clearTimeout(story.scrollT); cancelAnimationFrame(story.raf); $('#sbFill').style.width='0'; setStoryButtons(); }
 function toggleStory(){ award('start'); story.on ? stopStory() : startStory(); }
 $('#sbPrev').addEventListener('click',prevStep);
 $('#sbNext').addEventListener('click',nextStep);
