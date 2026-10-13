@@ -213,7 +213,9 @@ section,#console{scroll-margin-top:84px}
 
 .quests{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
 .quest{position:relative;background:var(--ink);border:2px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:9px;align-content:start;overflow:hidden}
-.quest .qtag{justify-self:start;font-family:var(--pixel);font-size:10px;letter-spacing:.12em;padding:3px 8px;border-radius:4px;background:var(--ink-3);color:var(--teal)}
+.quest .qtag{justify-self:start;display:inline-flex;align-items:center;gap:7px;font-family:var(--pixel);font-weight:700;font-size:12px;letter-spacing:.12em;padding:6px 11px 6px 9px;border-radius:6px;background:var(--amber);color:var(--ink);box-shadow:0 3px 0 var(--amber-deep)}
+.quest .qtag .px{font-size:13px}
+.quest{border-top:4px solid var(--amber)}
 .quest h4{font-family:var(--display);font-weight:400;font-size:18px;line-height:1.15;padding-right:70px}
 .quest p{font-size:14.5px;color:var(--muted)}
 .quest .qstat{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;border-top:2px dashed var(--line);padding-top:10px;margin-top:2px}
@@ -713,7 +715,7 @@ const LEVELS = [
      {tag:'ADOPTION', t:'Launched automation people choose to keep', b:'Shipped 0-to-1 automation that plans each day around electricity prices, with an editable plan and clear handling of user overrides.', v:'90%', l:'of users keep the automation switched on', s:'Savings per home more than doubled versus the same homes a year earlier.'},
      {tag:'RETENTION', t:'Made the product\'s value visible', b:'Shipped a forecast-versus-actual savings view so users can see what the product earns them.', v:'SEK 1M+', l:'saved for customers by battery optimisation in my first year', s:'Every user with 30+ days of data saved money.'},
      {tag:'B2B PLATFORM', t:'Expanded the partner platform end to end', b:'Took the B2B platform from quoting to full project management, and gave partners direct access to their customers\' accounts for support.', v:'3×', l:'more customer proposals created by partners each quarter', s:'The partner network more than doubled.'},
-     {tag:'DELIVERY', t:'Shipped the partners\' field app', b:'Defined the field app partner teams use to run jobs and capture documentation that flows straight into the customer app.', v:'LIVE', l:'on Google Play and the App Store'}
+     {tag:'DELIVERY', t:'Shipped products on both sides of the ecosystem', b:'Took each from prototype to release with design and engineering: the redesigned consumer app, the partners\' field app, the partner web platform for project management, and the website with its savings calculator.', v:'5', l:'products live across consumer and partner platforms', s:'On the App Store, Google Play and the web.'}
    ],
    patch:[
      {d:'Dec 2025', v:'WattWealth 1.1.0', t:'Complete redesign: a daily plan, usage graph, live flow view, savings tracking, documents, and light and dark mode.'},
@@ -1012,7 +1014,7 @@ function renderLevel(i, animate){
   let extra = '';
   if(L.quests){
     extra += `<div class="blk"><h3>QUESTS COMPLETED</h3><div class="quests">${L.quests.map(q=>`
-      <article class="quest"><span class="stamp">COMPLETE</span><span class="qtag">${esc(q.tag)}</span><h4>${esc(q.t)}</h4><p>${esc(q.b)}</p>
+      <article class="quest"><span class="stamp">COMPLETE</span><span class="qtag">${icon(({"ECOSYSTEM":"bolt","ENGAGEMENT":"star","ADOPTION":"check","RETENTION":"trophy","B2B PLATFORM":"folder","DELIVERY":"app"})[q.tag]||"star")}${esc(q.tag)}</span><h4>${esc(q.t)}</h4><p>${esc(q.b)}</p>
       <div class="qstat"><b data-v="${esc(q.v)}">${esc(q.v)}</b><span>${esc(q.l)}</span></div>${q.s?`<div class="qsub">${esc(q.s)}</div>`:''}</article>`).join('')}</div></div>`;
     extra += `<div class="blk"><h3>RELEASE LOG</h3><p class="blk-note">What shipped and when: every update to the live apps since the redesign, taken from their public App Store and Google Play release notes.</p><details class="patch" id="patchNotes"><summary>SHOW ${L.patch.length} RELEASES</summary><ol>${L.patch.map(p=>`<li><span class="when">${esc(p.d)}<small>${esc(p.v)}</small></span><span>${esc(p.t)}</span></li>`).join('')}</ol></details></div>`;
   }
