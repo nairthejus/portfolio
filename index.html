@@ -340,6 +340,27 @@ body.story-on .wrap{padding-bottom:150px}
 .modal.wide{width:min(920px,100%)}
 .modal .cvimg{width:100%;height:auto;border-radius:8px;background:var(--paper);display:block}
 
+/* ---------- CV lock + riff game ---------- */
+.cvlock{width:160px;max-width:100%;aspect-ratio:8.5/11;border-radius:10px;border:2px solid var(--line);display:grid;place-items:center;align-content:center;gap:10px;text-align:center;
+  background:repeating-linear-gradient(135deg,var(--ink) 0 14px,var(--ink-3) 14px 28px);color:var(--amber)}
+.cvlock .ico{font-size:38px;line-height:1;color:var(--amber)}
+.cvlock.open .ico{color:var(--teal)}
+@media (max-width:480px){.cvlock{width:120px}}
+.cvlock span:not(.ico){font-family:var(--pixel);font-size:10px;letter-spacing:.14em;color:var(--text);background:var(--ink);padding:3px 8px;border-radius:4px}
+.cvlock.open{background:var(--ink);border-color:var(--teal);color:var(--teal)}
+.riffgame{margin-top:14px;display:grid;gap:12px}
+.pads{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-width:360px}
+.pad{--pc:var(--amber);aspect-ratio:1;border-radius:12px;border:3px solid var(--pc);background:var(--ink);color:var(--pc);font-family:var(--display);font-size:20px;cursor:pointer;transition:transform .08s,background .08s,box-shadow .08s}
+.pad:disabled{cursor:default;opacity:.55}
+.pad.lit{background:var(--pc);color:var(--ink);box-shadow:0 0 24px color-mix(in srgb,var(--pc) 60%,transparent);transform:scale(.96);opacity:1}
+.pad:nth-child(2){--pc:var(--teal)}.pad:nth-child(3){--pc:var(--rose)}.pad:nth-child(4){--pc:var(--violet)}
+.gamebar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.gamestat{font-family:var(--pixel);font-size:11px;letter-spacing:.08em;color:var(--muted)}
+.gamestat b{color:var(--amber);font-weight:400}
+.gamestat.ok b{color:var(--teal)}.gamestat.bad b{color:var(--rose)}
+.skipcv{font-size:13.5px;color:var(--muted)}
+.riffname{font-family:var(--pixel);font-size:10px;letter-spacing:.08em;color:var(--amber);margin-left:8px}
+
 /* ---------- Toasts & modals ---------- */
 .toasts{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:60;display:grid;gap:10px;justify-items:end;pointer-events:none}
 .toast{pointer-events:auto;display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;max-width:min(360px,calc(100vw - 32px));background:var(--ink-2);border:2px solid var(--amber);border-radius:12px;padding:10px 14px;box-shadow:0 10px 30px var(--shade);animation:tin .35s cubic-bezier(.2,.9,.3,1.3)}
@@ -425,7 +446,7 @@ body.story-on .wrap{padding-bottom:150px}
         <div class="moves">
           <div><span class="k">SPECIAL</span><span><b>Prototype first.</b> Every feature becomes a working prototype before design and engineering commit.</span></div>
           <div><span class="k">PASSIVE</span><span><b>Systems ear.</b> Change one frequency and the whole mix moves. Products behave the same way.</span></div>
-          <div><span class="k">EMOTE</span><span><button class="btn small ghost" id="riffBtn" type="button">Play a riff</button></span></div>
+          <div><span class="k">EMOTE</span><span><button class="btn small ghost" id="riffBtn" type="button">Play a riff</button><span class="riffname" id="riffName" aria-live="polite"></span></span></div>
         </div>
       </div>
 
@@ -512,12 +533,25 @@ body.story-on .wrap{padding-bottom:150px}
     </div>
     <div class="save">
       <div class="card cvcard">
-        <button class="cvthumb" type="button" id="cvThumb" aria-label="View the CV"><img src="cv/Thejus_Nair_Resume_2026.png" alt="Preview of Thejus Nair's one-page CV" width="1190" height="1540"></button>
+        <div class="cvlock" id="cvLock" aria-hidden="true"><span class="ico" id="cvLockIco"></span><span id="cvLockTxt">CV · LOCKED</span></div>
         <div>
-          <span class="eyebrow">CV · 1 page · PDF</span>
-          <h3>Thejus Nair, Product Manager</h3>
-          <p>Product work at WattWealth and Freecomers, the Pocket FM and studio years, projects, education and skills.</p>
-          <div class="acts">
+          <span class="eyebrow">Bonus round · CV</span>
+          <h3 id="cvHead">Play the riff to unlock my CV</h3>
+          <p id="cvSub">Listen to the four-note riff, then play it back on the pads. Use the keys 1 to 4 if you prefer. Every attempt is a new riff.</p>
+          <div class="riffgame" id="riffGame">
+            <div class="pads" id="pads" role="group" aria-label="Riff pads">
+              <button class="pad" type="button" data-p="0" aria-label="Pad 1">1</button>
+              <button class="pad" type="button" data-p="1" aria-label="Pad 2">2</button>
+              <button class="pad" type="button" data-p="2" aria-label="Pad 3">3</button>
+              <button class="pad" type="button" data-p="3" aria-label="Pad 4">4</button>
+            </div>
+            <div class="gamebar">
+              <button class="btn" id="riffStart" type="button">Play the riff</button>
+              <span class="gamestat" id="gameStat" aria-live="polite">Press play, then repeat what you hear.</span>
+            </div>
+            <p class="skipcv">Can't play right now? <a href="#save" id="skipCv">Email me</a> and I'll send the CV.</p>
+          </div>
+          <div class="acts" id="cvActs" hidden>
             <button class="btn" id="cvView" type="button">View CV</button>
             <button class="btn teal" id="cvDl" type="button" hidden>Download PDF</button>
             <a class="btn teal" id="cvDlNative" href="cv/Thejus_Nair_Resume_2026.pdf" download="Thejus_Nair_Resume_2026.pdf" hidden>Download PDF</a>
@@ -774,7 +808,7 @@ const ACH = [
  {id:'patch', n:'Release Reader', d:'Open the release log on WattWealth (4-1).', i:'doc'},
  {id:'beat', n:'Drop the Beat', d:'Play the riff, or type "mix".', i:'music'},
  {id:'speed', n:'Speedrunner', d:'Finish story mode.', i:'play'},
- {id:'cv', n:'Saved Game', d:'View or download the CV.', i:'doc'},
+ {id:'cv', n:'Saved Game', d:'Unlock the CV by playing back the riff.', i:'doc'},
  {id:'party', n:'Party Invite', d:'Copy a contact detail.', i:'check'}
 ];
 
@@ -801,8 +835,25 @@ const sfx = {
   select(){ if(S.sfx){ tone(523,0,.07,'square',.04); tone(784,.07,.12,'square',.04); } },
   ach(){ if(S.sfx) [523,659,784,1046].forEach((f,i)=>tone(f,i*.08,.2,'triangle',.07)); },
   lvl(){ if(S.sfx) [392,523,659,784,1046,1318].forEach((f,i)=>tone(f,i*.06,.18,'square',.04)); },
-  riff(){ [[196,0,.2],[233,.18,.2],[262,.36,.16],[277,.5,.12],[294,.62,.3],[349,.98,.18],[392,1.14,.5]].forEach(([f,t,d])=>{ tone(f,t,d,'sawtooth',.045); tone(f/2,t,d,'triangle',.05); }); }
 };
+
+/* ---------- Riffs ---------- */
+const RIFFS = [
+ {n:'Blues lick', p:()=>[[196,0,.2],[233,.18,.2],[262,.36,.16],[277,.5,.12],[294,.62,.3],[349,.98,.18],[392,1.14,.5]].forEach(([f,t,d])=>{ tone(f,t,d,'sawtooth',.045); tone(f/2,t,d,'triangle',.05); })},
+ {n:'8-bit victory', p:()=>[[523,0,.1],[523,.12,.1],[523,.24,.1],[523,.38,.3],[415,.72,.3],[466,1.04,.3],[523,1.36,.14],[466,1.52,.1],[523,1.64,.6]].forEach(([f,t,d])=>tone(f,t,d,'square',.05))},
+ {n:'Power chords', p:()=>[[82.4,0],[82.4,.16],[82.4,.32],[98,.52],[110,.78],[82.4,1.04],[82.4,1.2],[123.5,1.4],[110,1.66]].forEach(([f,t])=>{ tone(f,t,.22,'sawtooth',.06); tone(f*1.5,t,.22,'sawtooth',.04); tone(f*2,t,.22,'square',.02); })},
+ {n:'Funk bass', p:()=>[[82.4,0,.12],[164.8,.2,.08],[82.4,.36,.12],[98,.62,.1],[110,.78,.14],[82.4,1.04,.12],[164.8,1.2,.08],[146.8,1.36,.1],[123.5,1.52,.24]].forEach(([f,t,d])=>{ tone(f,t,d,'sawtooth',.06); tone(f,t,d,'triangle',.06); })},
+ {n:'Arpeggio rise', p:()=>[220,261.6,329.6,440,523.3,659.3,880,659.3,523.3,440].forEach((f,k)=>tone(f,k*.11,.2,'triangle',.06))},
+ {n:'Lo-fi chords', p:()=>[[[261.6,329.6,392,493.9],0],[[220,261.6,329.6,392],.8],[[174.6,220,261.6,329.6],1.6]].forEach(([ch,t])=>ch.forEach((f,k)=>tone(f,t+k*.03,.75,'sine',.045)))},
+ {n:'Synthwave lead', p:()=>[[329.6,0,.3],[392,.3,.3],[440,.6,.3],[493.9,.9,.2],[440,1.1,.2],[392,1.3,.6]].forEach(([f,t,d])=>{ tone(f,t,d,'sawtooth',.035); tone(f*1.005,t,d,'sawtooth',.03); tone(f/2,t,d,'triangle',.04); })}
+];
+let lastRiff = -1;
+function playRiff(){
+  let i; do{ i = Math.floor(Math.random()*RIFFS.length); }while(i===lastRiff && RIFFS.length>1);
+  lastRiff = i; RIFFS[i].p();
+  const el = document.getElementById('riffName'); if(el){ el.textContent = '♪ ' + RIFFS[i].n.toUpperCase(); }
+  return RIFFS[i].n;
+}
 
 /* ---------- Toasts ---------- */
 function toast(kind,title,sub,ico){
@@ -1207,10 +1258,64 @@ function openCV(from){
   award('cv'); sfx.blip();
 }
 $('#cvView').addEventListener('click',e=>openCV(e.currentTarget));
-$('#cvThumb').addEventListener('click',e=>openCV(e.currentTarget));
 $('#cvDl').addEventListener('click',downloadCV);
 $('#cvOpen').addEventListener('click',()=>award('cv'));
 initDownloads(0);
+
+const PAD_NOTES = [220, 261.63, 293.66, 329.63];
+const game = {seq:[], pos:0, busy:false, fails:0};
+function lightPad(i, ms){
+  const p = document.querySelectorAll('#pads .pad')[i]; if(!p) return;
+  p.classList.add('lit'); setTimeout(()=>p.classList.remove('lit'), ms||260);
+  tone(PAD_NOTES[i],0,.32,'triangle',.08); tone(PAD_NOTES[i]*2,0,.18,'square',.02);
+}
+function setPads(on){ document.querySelectorAll('#pads .pad').forEach(p=>p.disabled=!on); }
+function gameStatus(html, cls){ const g=$('#gameStat'); g.className='gamestat'+(cls?' '+cls:''); g.innerHTML=html; }
+function newRiff(){
+  const len = game.fails>=3 ? 3 : 4;
+  const seq = []; while(seq.length<len){ const n=Math.floor(Math.random()*4); if(seq.length && seq[seq.length-1]===n && Math.random()<.7) continue; seq.push(n); }
+  return seq;
+}
+function playSeq(){
+  game.busy = true; game.pos = 0; setPads(false);
+  gameStatus('<b>LISTEN…</b>');
+  game.seq.forEach((n,k)=>setTimeout(()=>lightPad(n,330), 350 + k*520));
+  setTimeout(()=>{ game.busy=false; setPads(true); gameStatus(`<b>YOUR TURN</b> · 0 / ${game.seq.length}`); $('#riffStart').textContent='Replay the riff'; }, 350 + game.seq.length*520);
+}
+function startGame(){ game.seq = newRiff(); playSeq(); }
+function padHit(i){
+  if(game.busy || !game.seq.length) return;
+  lightPad(i,200);
+  if(i === game.seq[game.pos]){
+    game.pos++;
+    if(game.pos === game.seq.length){ setPads(false); game.busy = true; setTimeout(unlockCV, 350); }
+    else gameStatus(`<b>YOUR TURN</b> · ${game.pos} / ${game.seq.length}`);
+  } else {
+    game.fails++; setPads(false); game.busy = true;
+    gameStatus(game.fails===3 ? '<b>OFF-KEY.</b> Next riff is only three notes.' : '<b>OFF-KEY.</b> New riff incoming…', 'bad');
+    setTimeout(()=>{ game.busy=false; startGame(); }, 1300);
+  }
+}
+function unlockCV(silent){
+  S.cvUnlocked = true; save();
+  $('#riffGame').hidden = true; $('#cvActs').hidden = false;
+  $('#cvHead').textContent = 'CV unlocked';
+  $('#cvSub').textContent = 'Nice ear. View it here, download the PDF, or open it in a new tab.';
+  $('#cvLock').classList.add('open'); $('#cvLockIco').innerHTML = icon('check'); $('#cvLockTxt').textContent = 'CV · UNLOCKED';
+  if(!silent){ [523,659,784,1046].forEach((f,k)=>tone(f,k*.09,.22,'square',.05)); award('cv'); }
+}
+$('#cvLockIco').innerHTML = icon('lock');
+document.querySelectorAll('#pads .pad').forEach(p=>p.addEventListener('click',()=>padHit(+p.dataset.p)));
+$('#riffStart').addEventListener('click',()=>{ if(game.busy) return; if(game.seq.length && game.pos===0) playSeq(); else startGame(); });
+$('#skipCv').addEventListener('click',e=>{ e.preventDefault(); e.stopPropagation(); const m=document.querySelector('.contact-col .ct'); if(m){ m.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'}); m.style.borderColor='var(--amber)'; setTimeout(()=>m.style.borderColor='',1600); } });
+document.addEventListener('keydown',e=>{
+  if($('#riffGame').hidden || !['1','2','3','4'].includes(e.key)) return;
+  const r = $('#riffGame').getBoundingClientRect(); if(r.bottom<0 || r.top>innerHeight) return;
+  const t=(e.target.tagName||'').toLowerCase(); if(t==='input'||t==='textarea') return;
+  padHit(+e.key-1);
+});
+setPads(false);
+if(S.cvUnlocked) unlockCV(true);
 
 /* ---------- In-page links: scroll without leaving a #hash in the URL ---------- */
 document.addEventListener('click',e=>{
@@ -1229,7 +1334,7 @@ $('#storyBtn').addEventListener('click',toggleStory);
 $('#storyBtn2').addEventListener('click',toggleStory);
 $('#hudQuest').addEventListener('click',()=>$('#quests').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'}));
 $('#sfxBtn').addEventListener('click',()=>{ S.sfx = !S.sfx; save(); renderHUD(); if(S.sfx){ actx(); sfx.select(); } });
-$('#riffBtn').addEventListener('click',()=>{ sfx.riff(); award('beat'); });
+$('#riffBtn').addEventListener('click',()=>{ playRiff(); award('beat'); });
 $('#newGame').addEventListener('click',()=>{ S = {xp:0, ach:[], visited:[], items:[], sfx:S.sfx}; save(); renderInventory(); renderQuestLog(); markNodes(); toast('lvl','New game+','Progress reset. Good luck, explorer.','play'); });
 let buf = '';
 document.addEventListener('keydown',e=>{
@@ -1240,7 +1345,7 @@ document.addEventListener('keydown',e=>{
     if(e.key==='ArrowRight'||e.key==='ArrowDown'){ e.preventDefault(); selectLevel(Math.min(LEVELS.length-1,cur+1),{user:true}); focusNode(); }
     if(e.key==='ArrowLeft'||e.key==='ArrowUp'){ e.preventDefault(); selectLevel(Math.max(0,cur-1),{user:true}); focusNode(); }
   }
-  if(e.key && e.key.length===1){ buf = (buf + e.key.toLowerCase()).slice(-3); if(buf==='mix'){ sfx.riff(); award('beat'); } }
+  if(e.key && e.key.length===1){ buf = (buf + e.key.toLowerCase()).slice(-3); if(buf==='mix'){ playRiff(); award('beat'); } }
 });
 function focusNode(){ const n = document.querySelector(`#mapSvg .node[data-i="${cur}"]`); if(n) n.focus(); }
 
