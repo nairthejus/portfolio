@@ -360,6 +360,11 @@ body.story-on .wrap{padding-bottom:190px}
 .story-cap:not([hidden]){animation:tin .45s cubic-bezier(.2,.9,.3,1.25)}
 .story-cap .k{font-family:var(--pixel);font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--ink);background:var(--rose);padding:4px 8px;border-radius:5px;white-space:nowrap}
 .story-cap b{color:var(--amber);font-weight:600}
+.story-cap .msg{flex:1;min-width:220px}
+.story-cap .go{display:flex;align-items:center;gap:10px 12px;flex-wrap:wrap}
+.story-cap .alt{font-size:13px;color:var(--muted)}
+#capPlay{background:var(--rose);box-shadow:0 4px 0 color-mix(in srgb,var(--rose) 55%,var(--ink))}
+@media (prefers-reduced-motion:no-preference){#capPlay.ping{animation:capPing 1.2s ease-in-out 3}@keyframes capPing{50%{transform:scale(1.08);box-shadow:0 4px 0 color-mix(in srgb,var(--rose) 55%,var(--ink)),0 0 0 8px color-mix(in srgb,var(--rose) 30%,transparent)}}}
 
 /* ---------- Save point ---------- */
 .save{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:14px}
@@ -459,7 +464,6 @@ body.story-on .wrap{padding-bottom:190px}
     <p class="lede">I'm <b>Thejus Nair</b>, a Product Manager who builds B2B and B2C products end to end, with 0-to-1 launches across growth, automation and workflow products. Before product, I spent 11 years in audio production, running content teams and my own studio.</p>
     <div class="cta-row">
       <button class="btn" id="pressStart" type="button"><span id="icoPlay"></span>Press start</button>
-      <button class="btn ghost" id="storyBtn" type="button" aria-pressed="false">Story mode</button>
       <a class="btn ghost" href="#save">Get my CV</a>
     </div>
     <p class="hint">Explore to earn <b>XP</b> and unlock <b>15 achievements</b>. Your progress fills the bar at the top of the page.</p>
@@ -514,11 +518,10 @@ body.story-on .wrap{padding-bottom:190px}
       <div>
         <span class="eyebrow">World map</span>
         <h2 id="mapTitle">Every level led here</h2>
-        <p>My career in seven worlds, each one feeding the next. Pick a node, use the arrow keys, or let story mode walk you through it.</p>
+        <p>My career in seven worlds, each one feeding the next.</p>
       </div>
-      <button class="btn ghost small" id="storyBtn2" type="button" aria-pressed="false">Story mode</button>
     </div>
-    <div class="story-cap" id="storyCap" hidden aria-live="polite"></div>
+    <div class="story-cap" id="storyCap" aria-live="polite"></div>
     <div class="map" id="mapBox"><svg id="mapSvg" role="group" aria-label="Career world map"></svg></div>
     <div class="worlds" id="worlds" role="group" aria-label="Chapters and worlds"></div>
     <p class="worlds-note">Each <b>world</b> is one step of my career. The captions on the map group them into four <b>chapters</b>.</p>
@@ -1140,6 +1143,33 @@ function glideTo(el, dur){
   const step = now => { const p = Math.min(1,(now-t0)/dur); window.scrollTo(0, start + dist*ease(p)); if(p<1) glideRaf = requestAnimationFrame(step); };
   glideRaf = requestAnimationFrame(step);
 }
+function glideToY(target, dur){
+  target = Math.max(0, Math.min(target, document.documentElement.scrollHeight - innerHeight));
+  if(reduce){ window.scrollTo(0, target); return; }
+  cancelAnimationFrame(glideRaf);
+  const start = window.scrollY, dist = target - start, t0 = performance.now();
+  const ease = p => p<.5 ? 2*p*p : 1-Math.pow(-2*p+2,2)/2;
+  const step = now => { const p = Math.min(1,(now-t0)/dur); window.scrollTo(0, start + dist*ease(p)); if(p<1) glideRaf = requestAnimationFrame(step); };
+  glideRaf = requestAnimationFrame(step);
+}
+/* Story mode: keep the caption and the whole map visible between the header and the story bar. */
+function frameMap(i){
+  const hud = document.querySelector('.hud'), hudH = hud ? hud.getBoundingClientRect().height : 0;
+  const bar = $('#storyBar'), barH = bar && !bar.hidden ? bar.getBoundingClientRect().height + 24 : 0;
+  const cap = $('#storyCap'), svg = $('#mapSvg');
+  const top = hudH + 10, avail = innerHeight - top - barH - 10;
+  if(mapMode === 'h'){
+    const chrome = cap.getBoundingClientRect().height + 12 + 8;
+    svg.style.maxHeight = Math.max(220, avail - chrome) + 'px';
+    glideToY(cap.getBoundingClientRect().top + scrollY - top, 700);
+  } else {
+    svg.style.maxHeight = '';
+    if(i === 0){ glideToY(cap.getBoundingClientRect().top + scrollY - top, 700); return; }
+    const n = document.querySelector(`.node[data-i="${i}"] .ring`); if(!n) return;
+    const r = n.getBoundingClientRect();
+    glideToY(r.top + r.height/2 + scrollY - (top + avail/2), 700);
+  }
+}
 const story = {on:false, paused:false, i:0, timer:null, raf:null, t0:0, dur:0, left:0};
 function readTime(L){
   let txt = L.story.join(' ');
@@ -1150,7 +1180,6 @@ function readTime(L){
   return Math.max(14000, Math.min(75000, words/3*1000));
 }
 function setStoryButtons(){
-  ['#storyBtn','#storyBtn2'].forEach(sel=>{ const b=$(sel); b.setAttribute('aria-pressed',story.on?'true':'false'); b.textContent = story.on ? 'Exit story' : 'Story mode'; });
   $('#storyBar').hidden = !story.on;
   document.body.classList.toggle('story-on', story.on);
   if(!story.on) return;
@@ -1165,9 +1194,14 @@ function startStory(){
   runStep(true);
   const tip = $('#sbTip'); tip.hidden = false; clearTimeout(story.tipT); story.tipT = setTimeout(()=>{ tip.hidden = true; }, 7000);
 }
+function readyCaption(){
+  const c = $('#storyCap');
+  c.innerHTML = `<span class="k">START HERE</span><span class="msg"><b>This is my career map.</b> Seven worlds, each one leading to the next.</span><span class="go"><button class="btn small" id="capPlay" type="button">▶ Play my journey</button><span class="alt">or pick any world to explore it yourself</span></span>`;
+  $('#capPlay').addEventListener('click',()=>{ award('start'); sfx.select(); startStory(); });
+}
 function storyCaption(i){
   const L = LEVELS[i], where = esc(`World ${i+1} · ${L.title}`);
-  if(i===0) return `<span class="k">STORY MODE</span><span><b>This is my career map.</b> Seven worlds, each one leading to the next. Let's begin the story at <b>${where}</b>.</span>`;
+  if(i===0) return `<span class="k">STORY MODE</span><span class="msg">Here we go. The story begins at <b>${where}</b>.</span>`;
   if(i===LEVELS.length-1) return `<span class="k">FINAL WORLD</span><span>Last stop: <b>${where}</b>, where I am now.</span>`;
   const newCh = LEVELS[i-1].world !== L.world;
   return `<span class="k">${newCh?'NEW CHAPTER':'NEXT STOP'}</span><span>${newCh?`<b>${esc(WORLDS[L.world])}.</b> `:''}On to <b>${where}</b>.</span>`;
@@ -1176,10 +1210,11 @@ function runStep(fresh){
   clearTimeout(story.timer); cancelAnimationFrame(story.raf);
   if(fresh){
     clearTimeout(story.scrollT);
-    const cap = $('#storyCap'); cap.innerHTML = storyCaption(story.i); cap.hidden = false;
-    const beat = story.i===0 ? 5200 : MAP_BEAT;
-    glideTo($('#map'), 700);
+    const cap = $('#storyCap'); cap.innerHTML = storyCaption(story.i);
+    const beat = story.i===0 ? 3600 : MAP_BEAT;
+    setStoryButtons();
     selectLevel(story.i,{fromStory:true});
+    frameMap(story.i);
     story.dur = readTime(LEVELS[story.i]) + beat; story.left = story.dur;
     story.scrollT = setTimeout(()=>{ if(story.on && !story.paused) glideTo($('#console'), 1400); }, beat - 400);
   }
@@ -1200,7 +1235,7 @@ function togglePause(){
   if(story.paused){ story.paused = false; const r=$('#console').getBoundingClientRect(); if(r.top>innerHeight*.6 || r.bottom<0) glideTo($('#console'),900); runStep(false); }
   else { story.paused = true; clearTimeout(story.timer); cancelAnimationFrame(story.raf); story.left = Math.max(0, story.left - (performance.now()-story.t0)); setStoryButtons(); }
 }
-function stopStory(){ $('#storyCap').hidden = true; $('#sbTip').hidden = true; clearTimeout(story.tipT); story.on=false; story.paused=false; clearTimeout(story.timer); clearTimeout(story.scrollT); cancelAnimationFrame(story.raf); $('#sbFill').style.width='0'; setStoryButtons(); }
+function stopStory(){ readyCaption(); $('#mapSvg').style.maxHeight = ''; $('#sbTip').hidden = true; clearTimeout(story.tipT); story.on=false; story.paused=false; clearTimeout(story.timer); clearTimeout(story.scrollT); cancelAnimationFrame(story.raf); $('#sbFill').style.width='0'; setStoryButtons(); }
 function toggleStory(){ award('start'); story.on ? stopStory() : startStory(); }
 $('#sbPrev').addEventListener('click',prevStep);
 $('#sbNext').addEventListener('click',nextStep);
@@ -1415,9 +1450,8 @@ document.addEventListener('click',e=>{
 $('#icoTrophy').innerHTML = icon('trophy');
 $('#icoPlay').innerHTML = icon('play');
 $('#icoDoc').innerHTML = icon('doc');
-$('#pressStart').addEventListener('click',()=>{ award('start'); sfx.select(); selectLevel(0,{user:true}); $('#map').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'}); });
-$('#storyBtn').addEventListener('click',toggleStory);
-$('#storyBtn2').addEventListener('click',toggleStory);
+$('#pressStart').addEventListener('click',()=>{ award('start'); sfx.select(); glideTo($('#map'), 800); const b=$('#capPlay'); if(b){ b.classList.remove('ping'); void b.offsetWidth; setTimeout(()=>b.classList.add('ping'), 700); } });
+readyCaption();
 $('#hudQuest').addEventListener('click',()=>$('#quests').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'}));
 function revealChime(){
   if(!S.sfx) return; const a = actx(); if(!a) return;
