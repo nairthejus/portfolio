@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="Thejus Nair, Product Manager. A playable portfolio: from audio engineering to building B2B and B2C products.">
 <meta property="og:title" content="Thejus Nair, Remastered">
-<meta property="og:description" content="A playable PM portfolio: seven levels from the mixing desk to the product roadmap.">
+<meta property="og:description" content="A playable PM portfolio: seven worlds from the mixing desk to the product roadmap.">
 <meta property="og:type" content="website">
 <style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}</style>
 <title>Thejus Nair, Remastered</title>
@@ -295,6 +295,8 @@ footer{margin-top:28px;text-align:center;font-family:var(--pixel);font-size:10.5
 footer button{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit;letter-spacing:inherit}
 
 /* ---------- Hints, worlds, rewards ---------- */
+.why{font-size:15.5px;color:var(--muted);max-width:62ch;border-left:3px solid var(--teal);padding-left:12px}
+.why b{color:var(--teal);font-weight:600}
 .hint{font-family:var(--pixel);font-size:11px;letter-spacing:.08em;color:var(--muted)}
 .hint b{color:var(--amber);font-weight:400}
 .worlds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}
@@ -420,6 +422,7 @@ body.story-on .wrap{padding-bottom:150px}
       <button class="btn ghost" id="storyBtn" type="button" aria-pressed="false">Story mode</button>
       <a class="btn ghost" href="#save">Get my CV</a>
     </div>
+    <p class="why"><b>Why a game?</b> Video games were a big part of my childhood, and some of my best friendships started with them. They're still how I wind down on weekends after a week of being switched on, so it felt natural to tell my story as one.</p>
     <p class="hint">Explore to earn <b>XP</b> and unlock <b>15 achievements</b>. Your progress fills the bar at the top of the page.</p>
     <div class="wave" aria-hidden="true">
       <canvas id="wave"></canvas>
@@ -437,6 +440,7 @@ body.story-on .wrap{padding-bottom:150px}
             <dt>ORIGIN</dt><dd>Audio engineer, 11 years</dd>
             <dt>BASE</dt><dd>Bengaluru, India</dd>
             <dt>BUILDS</dt><dd>B2B2C platforms, 0-to-1 products</dd>
+            <dt>OFF DUTY</dt><dd>Weekend gamer since childhood</dd>
             <dt>SPEAKS</dt><dd>English, Hindi, Malayalam, Kannada</dd>
           </dl>
         </div>
@@ -457,7 +461,7 @@ body.story-on .wrap{padding-bottom:150px}
         <h3 id="hsTitle">High scores <span class="blink">NEW RECORD</span></h3>
         <div class="scroll-x">
           <table class="score-table">
-            <thead><tr><th>RANK</th><th>SCORE</th><th>FEAT</th><th style="text-align:right">LEVEL</th></tr></thead>
+            <thead><tr><th>RANK</th><th>SCORE</th><th>FEAT</th><th style="text-align:right">WORLD</th></tr></thead>
             <tbody id="scoreBody"></tbody>
           </table>
         </div>
@@ -470,14 +474,14 @@ body.story-on .wrap{padding-bottom:150px}
     <div class="sec-head">
       <div>
         <span class="eyebrow">World map</span>
-        <h2 id="mapTitle">Seven levels, one signal path</h2>
-        <p>My career in four worlds and seven levels, each one feeding the next. Pick a node, use the arrow keys, or let story mode walk you through it.</p>
+        <h2 id="mapTitle">Every level led here</h2>
+        <p>My career in seven worlds, each one feeding the next. Pick a node, use the arrow keys, or let story mode walk you through it.</p>
       </div>
       <button class="btn ghost small" id="storyBtn2" type="button" aria-pressed="false">Story mode</button>
     </div>
     <div class="map" id="mapBox"><svg id="mapSvg" role="group" aria-label="Career world map"></svg></div>
-    <div class="worlds" id="worlds" role="group" aria-label="Worlds and levels"></div>
-    <p class="worlds-note">Each <b>world</b> is a chapter of my career. Level codes read <b>world-level</b>: 2-1 is the first level of world 2.</p>
+    <div class="worlds" id="worlds" role="group" aria-label="Chapters and worlds"></div>
+    <p class="worlds-note">Each <b>world</b> is one step of my career. The captions on the map group them into four <b>chapters</b>.</p>
     <div id="console" aria-live="polite"></div>
   </section>
 
@@ -487,7 +491,7 @@ body.story-on .wrap{padding-bottom:150px}
       <div>
         <span class="eyebrow">Quest log · Visitor achievements</span>
         <h2 id="qlTitle">Your achievements on this page</h2>
-        <p>These are yours, not mine. You earn them by exploring: visiting each level, inspecting loot, opening the release log and finding the hidden riff. Progress is saved in this browser.</p>
+        <p>These are yours, not mine. You earn them by exploring: visiting each world, inspecting loot, opening the release log and finding the hidden riff. Progress is saved in this browser.</p>
       </div>
     </div>
     <div class="qlog-top"><span class="n" id="qlN">0 / 15 UNLOCKED</span><div class="bar"><i id="qlBar"></i></div></div>
@@ -518,7 +522,7 @@ body.story-on .wrap{padding-bottom:150px}
       <div>
         <span class="eyebrow">Skill tree</span>
         <h2 id="skTitle">Moves learned, and where</h2>
-        <p>Each skill points back to the level where it was earned. Select one to jump there.</p>
+        <p>Each skill points back to the world where it was earned. Select one to jump there.</p>
       </div>
     </div>
     <div class="tree" id="tree"></div>
@@ -539,17 +543,17 @@ body.story-on .wrap{padding-bottom:150px}
         <div class="cvlock" id="cvLock" aria-hidden="true"><span class="ico" id="cvLockIco"></span><span id="cvLockTxt">CV · LOCKED</span></div>
         <div>
           <span class="eyebrow">Bonus round · CV</span>
-          <h3 id="cvHead">Play the riff to unlock my CV</h3>
-          <p id="cvSub">Listen to the four-note riff, then play it back on the pads. Use the keys 1 to 4 if you prefer. Every attempt is a new riff.</p>
+          <h3 id="cvHead">Play back the lead line to unlock my CV</h3>
+          <p id="cvSub">Listen to the four-note lead line, then play it back on the pads. Use the keys 1 to 4 if you prefer. Every attempt is a new line.</p>
           <div class="riffgame" id="riffGame">
-            <div class="pads" id="pads" role="group" aria-label="Riff pads">
+            <div class="pads" id="pads" role="group" aria-label="Lead line pads">
               <button class="pad" type="button" data-p="0" aria-label="Pad 1">1</button>
               <button class="pad" type="button" data-p="1" aria-label="Pad 2">2</button>
               <button class="pad" type="button" data-p="2" aria-label="Pad 3">3</button>
               <button class="pad" type="button" data-p="3" aria-label="Pad 4">4</button>
             </div>
             <div class="gamebar">
-              <button class="btn" id="riffStart" type="button">Play the riff</button>
+              <button class="btn" id="riffStart" type="button">Play the lead line</button>
               <span class="gamestat" id="gameStat" aria-live="polite">Press play, then repeat what you hear.</span>
             </div>
             <p class="skipcv">Can't play right now? <a href="#save" id="skipCv">Email me</a> and I'll send the CV.</p>
@@ -576,9 +580,9 @@ body.story-on .wrap{padding-bottom:150px}
 <div class="storybar" id="storyBar" hidden role="region" aria-label="Story mode controls">
   <div class="row">
     <span class="lbl" id="sbLbl">STORY MODE</span>
-    <button class="btn ghost small" id="sbPrev" type="button" aria-label="Previous level">‹ Prev</button>
+    <button class="btn ghost small" id="sbPrev" type="button" aria-label="Previous world">‹ Prev</button>
     <button class="btn small" id="sbPause" type="button" aria-pressed="false">Pause</button>
-    <button class="btn ghost small" id="sbNext" type="button" aria-label="Next level">Next ›</button>
+    <button class="btn ghost small" id="sbNext" type="button" aria-label="Next world">Next ›</button>
     <button class="btn ghost small" id="sbStop" type="button">Exit</button>
   </div>
   <div class="prog"><i id="sbFill"></i></div>
@@ -651,21 +655,21 @@ const WORLDS = {1:'Origins',2:'The audio years',3:'The switch',4:'Product'};
 const WORLD_YEARS = {1:'Until 2014',2:'2014–2025',3:'2025',4:'2025–now'};
 
 const LEVELS = [
- { id:'origin', code:'1-1', world:1, short:'Biotech Lab', title:'The Biotech Lab', years:'Until 2013',
+ { id:'origin', code:'W1', world:1, short:'Biotech Lab', title:'The Biotech Lab', years:'Until 2013',
    role:'B.E. Biotechnology · PES Institute of Technology, Bengaluru',
    story:[
      'Every build starts somewhere unexpected. Mine started with a biotechnology degree and an internship at Biocon.',
      'The lab taught me the habit I still use on every product: form a hypothesis, test it, and let the evidence overrule the hunch.'
    ],
    moves:['Hypothesis testing','Scientific method','Systems thinking'], items:[], ach:'lv-origin' },
- { id:'band', code:'1-2', world:1, short:'The Band', title:'The Band & the Training Arc', years:'2013–2014',
+ { id:'band', code:'W2', world:1, short:'The Band', title:'The Band & the Training Arc', years:'2013–2014',
    role:'Cheisrah · Audio Academy, Recording Arts & Live Sound',
    story:[
      'While studying, I played in a band called Cheisrah. I recorded and edited our music myself and outsourced the mix.',
      'That side quest became the main quest. I trained in Recording Arts & Live Sound at Audio Academy, with internships at SD Audio, Hard Rock Cafe and Yash Raj Film Studios.'
    ],
    moves:['Recording & editing','Live sound','Learning by shipping'], items:[], ach:'lv-band' },
- { id:'studio', code:'2-1', world:2, short:'Eleven Gauge', title:'Eleven Gauge Recordings', years:'2014–2025',
+ { id:'studio', code:'W3', world:2, short:'Eleven Gauge', title:'Eleven Gauge Recordings', years:'2014–2025',
    role:'Founder & Creative Producer',
    story:[
      'In 2014 I spotted a gap: talented independent artists could not find affordable, high-quality studios that understood their genre. I started Eleven Gauge with no funding, no industry connections and no brand.',
@@ -676,7 +680,7 @@ const LEVELS = [
    trophies:['Produced Grammy long-listed work (Project Mishram, Meso)','Work featured in Rolling Stone India and Prog Magazine','Teaches mixing and audio production'],
    moves:['Customer discovery','Freemium acquisition','Tiered pricing','SOPs & process','Content-led growth','Teaching'],
    items:['playlist'], ach:'lv-studio' },
- { id:'pocketfm', code:'2-2', world:2, short:'Pocket FM', title:'Pocket FM', years:'2021–2024',
+ { id:'pocketfm', code:'W4', world:2, short:'Pocket FM', title:'Pocket FM', years:'2021–2024',
    role:'Lead Engineer (Audio) · Audio storytelling platform',
    story:[
      'Pocket FM was product thinking at scale, while I kept running the studio on weekends.',
@@ -685,7 +689,7 @@ const LEVELS = [
    loot:[{v:'22',l:'person team led'},{v:'1,500+',l:'acquisition assets shipped'},{v:'+35%',l:'efficiency from AI workflows'},{v:'+180%',l:'retention'}],
    moves:['Team leadership','AI workflow automation','Cross-functional delivery','High-volume pipelines'],
    items:['media'], ach:'lv-pocketfm' },
- { id:'bootcamp', code:'3-1', world:3, short:'PM Bootcamp', title:'Product Bootcamp', years:'2025',
+ { id:'bootcamp', code:'W5', world:3, short:'PM Bootcamp', title:'Product Bootcamp', years:'2025',
    role:'Product Management Launchpad · Upraised',
    story:[
      'I made the switch deliberately. I trained in product management and practised on real products: a Spotify feature concept, a fintech personalisation deck, a quick-commerce teardown and a no-code MVP.',
@@ -694,7 +698,7 @@ const LEVELS = [
    loot:[{v:'4',l:'practice products'},{v:'3',l:'domains: media, fintech, quick commerce'}],
    moves:['PRD writing','User research','Competitive analysis','Prototyping','Roadmapping'],
    items:['vibe-prd','vibe-proto','cheq','swiggy','nayanu'], ach:'lv-bootcamp' },
- { id:'freecomers', code:'3-2', world:3, short:'Freecomers', title:'Freecomers', years:'Jun–Sep 2025',
+ { id:'freecomers', code:'W6', world:3, short:'Freecomers', title:'Freecomers', years:'Jun–Sep 2025',
    role:'Product Manager (Intern) · Social platform for filmmakers',
    story:[
      'My first product role: a social marketplace for filmmakers and creative professionals, facing classic cold-start and network-effect problems.',
@@ -703,10 +707,10 @@ const LEVELS = [
    loot:[{v:'+75%',l:'engagement'},{v:'+22%',l:'user base'},{v:'35%',l:'adoption of Jobs & Projects'},{v:'100+',l:'user interviews'}],
    moves:['User interviews','Onboarding design','Marketplace dynamics','MVP delivery'],
    items:[], ach:'lv-freecomers' },
- { id:'boss', code:'4-1', world:4, boss:true, short:'WattWealth', title:'WattWealth', years:'Sep 2025–now',
+ { id:'boss', code:'W7', world:4, boss:true, short:'WattWealth', title:'WattWealth', years:'Sep 2025–now',
    role:'Product Manager · B2B2C energy tech, Sweden',
    story:[
-     'The current level. I own product across a consumer app, a B2B partner platform, the field app partner teams use, and the acquisition website.',
+     'Where I am now. I own product across a consumer app, a B2B partner platform, the field app partner teams use, and the acquisition website.',
      'Every feature runs the same loop: a working prototype to test flows and edge cases, iteration with our designer, then scoping effort and trade-offs with engineering before build.'
    ],
    quests:[
@@ -799,19 +803,19 @@ const LANGS = ['English','Hindi','Malayalam','Kannada'];
 
 const ACH = [
  {id:'start', n:'Press Start', d:'Begin the journey.', i:'play'},
- {id:'lv-origin', n:'Origin Story', d:'Visit the Biotech Lab (1-1).', i:'star'},
- {id:'lv-band', n:'Found the Spark', d:'Visit The Band (1-2).', i:'music'},
- {id:'lv-studio', n:'Studio Rat', d:'Visit Eleven Gauge (2-1).', i:'music'},
- {id:'lv-pocketfm', n:'Scale Mode', d:'Visit Pocket FM (2-2).', i:'up'},
- {id:'lv-bootcamp', n:'Back to School', d:'Visit PM Bootcamp (3-1).', i:'doc'},
- {id:'lv-freecomers', n:'First Product', d:'Visit Freecomers (3-2).', i:'app'},
- {id:'lv-boss', n:'Boss Level', d:'Visit WattWealth (4-1).', i:'bolt'},
- {id:'all', n:'Completionist', d:'Visit every level.', i:'trophy'},
+ {id:'lv-origin', n:'Origin Story', d:'Visit the Biotech Lab (World 1).', i:'star'},
+ {id:'lv-band', n:'Found the Spark', d:'Visit The Band (World 2).', i:'music'},
+ {id:'lv-studio', n:'Studio Rat', d:'Visit Eleven Gauge (World 3).', i:'music'},
+ {id:'lv-pocketfm', n:'Scale Mode', d:'Visit Pocket FM (World 4).', i:'up'},
+ {id:'lv-bootcamp', n:'Back to School', d:'Visit PM Bootcamp (World 5).', i:'doc'},
+ {id:'lv-freecomers', n:'First Product', d:'Visit Freecomers (World 6).', i:'app'},
+ {id:'lv-boss', n:'Boss Level', d:'Visit WattWealth (World 7).', i:'bolt'},
+ {id:'all', n:'Completionist', d:'Visit every world.', i:'trophy'},
  {id:'loot', n:'Loot Goblin', d:'Inspect 4 inventory items.', i:'folder'},
- {id:'patch', n:'Release Reader', d:'Open the release log on WattWealth (4-1).', i:'doc'},
+ {id:'patch', n:'Release Reader', d:'Open the release log on WattWealth (World 7).', i:'doc'},
  {id:'beat', n:'Drop the Beat', d:'Play the riff, or type "mix".', i:'music'},
  {id:'speed', n:'Speedrunner', d:'Finish story mode.', i:'play'},
- {id:'cv', n:'Saved Game', d:'Unlock the CV by playing back the riff.', i:'doc'},
+ {id:'cv', n:'Saved Game', d:'Unlock the CV by playing back the lead line.', i:'doc'},
  {id:'party', n:'Party Invite', d:'Copy a contact detail.', i:'check'}
 ];
 
@@ -929,7 +933,7 @@ function buildMap(){
   let html = '';
   if(horiz){
     const worldX = {1:[0,1],2:[2,3],3:[4,5],4:[6,6]};
-    Object.keys(worldX).forEach(w=>{ const [a,b]=worldX[w]; const x=(pts[a][0]+pts[b][0])/2; html += `<text class="world-lbl" x="${x}" y="44" text-anchor="middle"><tspan class="wk" x="${x}">WORLD ${w}</tspan><tspan x="${x}" dy="18">${WORLDS[w].toUpperCase()}</tspan></text>`; });
+    Object.keys(worldX).forEach(w=>{ const [a,b]=worldX[w]; const x=(pts[a][0]+pts[b][0])/2; html += `<text class="world-lbl" x="${x}" y="44" text-anchor="middle"><tspan class="wk" x="${x}">${WORLDS[w].toUpperCase()}</tspan><tspan x="${x}" dy="18">${WORLD_YEARS[w].toUpperCase()}</tspan></text>`; });
     [[1,2],[3,4],[5,6]].forEach(([a,b])=>{ const x=(pts[a][0]+pts[b][0])/2; html += `<line class="world-div" x1="${x}" y1="24" x2="${x}" y2="${H-20}"/>`; });
   }
   html += `<path class="cable-base" d="${d}"/><path class="cable-core" d="${d}"/><path class="cable-sig" d="${d}" id="fullPath"/>`;
@@ -938,7 +942,7 @@ function buildMap(){
     const [x,y] = pts[i]; const r = L.boss ? 34 : 26;
     const lx = horiz ? x : 188, ly = horiz ? y + r + 30 : y - 4;
     const anchor = horiz ? 'middle' : 'start';
-    html += `<g class="node${L.boss?' boss':''}" data-i="${i}" role="button" tabindex="0" style="--c:${COLORS[i]}" aria-label="Level ${L.code}: ${esc(L.title)}, ${esc(L.years)}">
+    html += `<g class="node${L.boss?' boss':''}" data-i="${i}" role="button" tabindex="0" style="--c:${COLORS[i]}" aria-label="World ${i+1}: ${esc(L.title)}, ${esc(L.years)}">
       <circle class="halo" cx="${x}" cy="${y}" r="${r+6}"/>
       <circle class="ring" cx="${x}" cy="${y}" r="${r}"/>
       <circle class="cap" cx="${x}" cy="${y}" r="${r-8}"/>
@@ -992,7 +996,7 @@ function markNodes(){
   document.querySelectorAll('#worlds .lvl-chip').forEach(c=>c.setAttribute('aria-current', +c.dataset.i===cur ? 'true':'false'));
 }
 function renderLevelBar(){
-  $('#worlds').innerHTML = [1,2,3,4].map(w=>`<div class="world"><span class="wk">WORLD ${w}</span><span class="wn">${esc(WORLDS[w])}</span><span class="wy">${esc(WORLD_YEARS[w].toUpperCase())}</span><div class="lvls">${LEVELS.map((L,i)=>L.world===w?`<button class="lvl-chip" type="button" data-i="${i}" style="--c:${COLORS[i]}"><span class="dot"></span>${L.code} ${esc(L.short.toUpperCase())}</button>`:'').join('')}</div></div>`).join('');
+  $('#worlds').innerHTML = [1,2,3,4].map(w=>`<div class="world"><span class="wk">CHAPTER</span><span class="wn">${esc(WORLDS[w])}</span><span class="wy">${esc(WORLD_YEARS[w].toUpperCase())}</span><div class="lvls">${LEVELS.map((L,i)=>L.world===w?`<button class="lvl-chip" type="button" data-i="${i}" style="--c:${COLORS[i]}"><span class="dot"></span>${L.code} ${esc(L.short.toUpperCase())}</button>`:'').join('')}</div></div>`).join('');
   $('#worlds').querySelectorAll('.lvl-chip').forEach(b=>b.addEventListener('click',()=>selectLevel(+b.dataset.i,{user:true})));
 }
 
@@ -1003,14 +1007,14 @@ function itemMini(id){
 }
 function renderLevel(i, animate){
   const L = LEVELS[i];
-  const state = L.boss ? 'CURRENT LEVEL' : 'CLEARED';
+  const state = L.boss ? 'NOW PLAYING' : 'CLEARED';
   let side = '';
   if(L.loot) side += `<div><h3>LOOT</h3><div class="loot">${L.loot.map(o=>`<div><b data-v="${esc(o.v)}">${esc(o.v)}</b><span>${esc(o.l)}</span></div>`).join('')}</div></div>`;
   if(L.trophies) side += `<div><h3>TROPHIES</h3><ul class="trophies">${L.trophies.map(t=>`<li>${icon('trophy')}<span>${esc(t)}</span></li>`).join('')}</ul></div>`;
   side += `<div><h3>MOVES LEARNED</h3><div class="chips">${L.moves.map(m=>`<span class="chip">${esc(m)}</span>`).join('')}</div></div>`;
   if(L.items && L.items.length) side += `<div><h3>ITEMS FOUND</h3><div class="item-btns">${L.items.map(itemMini).join('')}</div></div>`;
   const ra = ACH.find(x=>x.id===L.ach), ron = S.ach.includes(ra.id);
-  side += `<div><h3>YOUR REWARD FOR VISITING</h3><div class="reward${ron?' on':''}"><span class="bi">${icon(ron?ra.i:'lock')}</span><span>${ron?`<b>${esc(ra.n)}</b> unlocked. It's in your <a href="#quests">quest log</a>.`:`<b>${esc(ra.n)}</b> is waiting. Select this level on the map to claim it.`}</span></div></div>`;
+  side += `<div><h3>YOUR REWARD FOR VISITING</h3><div class="reward${ron?' on':''}"><span class="bi">${icon(ron?ra.i:'lock')}</span><span>${ron?`<b>${esc(ra.n)}</b> unlocked. It's in your <a href="#quests">quest log</a>.`:`<b>${esc(ra.n)}</b> is waiting. Select this world on the map to claim it.`}</span></div></div>`;
   let extra = '';
   if(L.quests){
     extra += `<div class="blk"><h3>QUESTS COMPLETED</h3><div class="quests">${L.quests.map(q=>`
@@ -1018,11 +1022,11 @@ function renderLevel(i, animate){
       <div class="qstat"><b data-v="${esc(q.v)}">${esc(q.v)}</b><span>${esc(q.l)}</span></div>${q.s?`<div class="qsub">${esc(q.s)}</div>`:''}</article>`).join('')}</div></div>`;
     extra += `<div class="blk"><h3>RELEASE LOG</h3><p class="blk-note">What shipped and when: every update to the live apps since the redesign, taken from their public App Store and Google Play release notes.</p><details class="patch" id="patchNotes"><summary>SHOW ${L.patch.length} RELEASES</summary><ol>${L.patch.map(p=>`<li><span class="when">${esc(p.d)}<small>${esc(p.v)}</small></span><span>${esc(p.t)}</span></li>`).join('')}</ol></details></div>`;
   }
-  const prev = i>0 ? `<button class="btn ghost small" type="button" data-go="${i-1}" aria-label="Previous level">‹ ${LEVELS[i-1].code}</button>` : '';
-  const next = i<LEVELS.length-1 ? `<button class="btn small" type="button" data-go="${i+1}" aria-label="Next level">${LEVELS[i+1].code} ›</button>` : `<a class="btn small teal" href="#inventory">Open inventory ›</a>`;
+  const prev = i>0 ? `<button class="btn ghost small" type="button" data-go="${i-1}" aria-label="Previous world">‹ ${LEVELS[i-1].code}</button>` : '';
+  const next = i<LEVELS.length-1 ? `<button class="btn small" type="button" data-go="${i+1}" aria-label="Next world">${LEVELS[i+1].code} ›</button>` : `<a class="btn small teal" href="#inventory">Open inventory ›</a>`;
   $('#console').innerHTML = `
   <div class="console" style="--c:${COLORS[i]}">
-    <div class="titlebar"><span class="lights"><i></i><i></i><i></i></span><span>WORLD ${L.world}: ${WORLDS[L.world].toUpperCase()} · LEVEL ${L.code}</span><span class="state">${state}</span></div>
+    <div class="titlebar"><span class="lights"><i></i><i></i><i></i></span><span>WORLD ${i+1} · ${WORLDS[L.world].toUpperCase()}</span><span class="state">${state}</span></div>
     <div class="console-in">
       <div class="lvl-head">
         <div><h2>${esc(L.title)}</h2><p class="role">${esc(L.role)} · ${esc(L.years)}</p></div>
@@ -1100,7 +1104,7 @@ function setStoryButtons(){
   document.body.classList.toggle('story-on', story.on);
   if(!story.on) return;
   const L = LEVELS[story.i];
-  $('#sbLbl').innerHTML = `STORY · <b>LEVEL ${story.i+1} OF ${LEVELS.length}</b> · ${esc(L.short.toUpperCase())}${story.paused?' <span class="paused">PAUSED</span>':''}`;
+  $('#sbLbl').innerHTML = `STORY · <b>WORLD ${story.i+1} OF ${LEVELS.length}</b> · ${esc(L.short.toUpperCase())}${story.paused?' <span class="paused">PAUSED</span>':''}`;
   const pb = $('#sbPause'); pb.textContent = story.paused ? 'Resume' : 'Pause'; pb.setAttribute('aria-pressed', story.paused?'true':'false');
   $('#sbPrev').disabled = story.i===0;
   $('#sbNext').textContent = story.i===LEVELS.length-1 ? 'Finish ›' : 'Next ›';
@@ -1163,7 +1167,7 @@ function openItem(id, from){
     <div class="mh"><span class="ibox">${icon(KIND_ICON[it.kind])}</span><div><span class="rar">${RAR[it.rarity]} · ${esc(it.domain.toUpperCase())}</span><h3 id="mTitle">${esc(it.name)}</h3></div></div>
     <p>${esc(it.desc)}</p>
     <div class="chips">${it.tags.map(t=>`<span class="chip">${esc(t)}</span>`).join('')}</div>
-    <div class="row"><span class="found">${it.level===null?'SIDE QUEST':'FOUND IN LEVEL '+LEVELS[it.level].code+' · '+esc(LEVELS[it.level].short.toUpperCase())}</span>
+    <div class="row"><span class="found">${it.level===null?'SIDE QUEST':'FOUND IN WORLD '+(it.level+1)+' · '+esc(LEVELS[it.level].short.toUpperCase())}</span>
       <span style="display:flex;gap:8px;flex-wrap:wrap">${it.links.map(l=>`<a class="btn small" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} ›</a>`).join('')}<button class="btn small ghost" type="button" id="mClose">Close</button></span></div>
   </div>`;
   ov.hidden = false;
@@ -1301,7 +1305,7 @@ function playSeq(){
   game.busy = true; game.pos = 0; setPads(false);
   gameStatus('<b>LISTEN…</b>');
   game.seq.forEach((n,k)=>setTimeout(()=>lightPad(n,330), 350 + k*520));
-  setTimeout(()=>{ game.busy=false; setPads(true); gameStatus(`<b>YOUR TURN</b> · 0 / ${game.seq.length}`); $('#riffStart').textContent='Replay the riff'; }, 350 + game.seq.length*520);
+  setTimeout(()=>{ game.busy=false; setPads(true); gameStatus(`<b>YOUR TURN</b> · 0 / ${game.seq.length}`); $('#riffStart').textContent='Replay the lead line'; }, 350 + game.seq.length*520);
 }
 function startGame(){ game.seq = newRiff(); playSeq(); }
 function padHit(i){
@@ -1313,7 +1317,7 @@ function padHit(i){
     else gameStatus(`<b>YOUR TURN</b> · ${game.pos} / ${game.seq.length}`);
   } else {
     game.fails++; setPads(false); game.busy = true;
-    gameStatus(game.fails===3 ? '<b>OFF-KEY.</b> Next riff is only three notes.' : '<b>OFF-KEY.</b> New riff incoming…', 'bad');
+    gameStatus(game.fails===3 ? '<b>OFF-KEY.</b> Next line is only three notes.' : '<b>OFF-KEY.</b> New line incoming…', 'bad');
     setTimeout(()=>{ game.busy=false; startGame(); }, 1300);
   }
 }
