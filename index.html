@@ -295,12 +295,23 @@ footer{margin-top:28px;text-align:center;font-family:var(--pixel);font-size:10.5
 footer button{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit;letter-spacing:inherit}
 
 /* ---------- Hints, worlds, rewards ---------- */
-.title-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,290px);gap:24px;align-items:center}
-@media (max-width:860px){.title-row{grid-template-columns:minmax(0,1fr)}.why{max-width:420px}}
-.why{font-size:13.5px;line-height:1.5;color:var(--text);background:var(--ink-2);border:2px solid var(--teal);border-radius:10px;padding:10px 13px;transform:rotate(-1.5deg);justify-self:start;
-  box-shadow:0 0 0 4px color-mix(in srgb,var(--teal) 14%,transparent),0 0 26px color-mix(in srgb,var(--teal) 22%,transparent)}
-.why .why-k{display:flex;align-items:center;gap:7px;font-family:var(--pixel);font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--teal);margin-bottom:4px}
-@media (prefers-reduced-motion:no-preference){.why{animation:whyIn .6s .3s both cubic-bezier(.2,.9,.3,1.3)}@keyframes whyIn{from{opacity:0;transform:rotate(-1.5deg) translateY(8px) scale(.96)}}}
+.title-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:start}
+.title-row .why{margin-top:22px}
+@media (max-width:860px){.title-row{grid-template-columns:minmax(0,1fr)}.title-row .why{margin-top:0}}
+.why{justify-self:start;max-width:320px;transform:rotate(-1.5deg)}
+.why-btn{display:inline-flex;align-items:center;gap:9px;cursor:pointer;text-align:left;font-family:var(--pixel);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;line-height:1.35;
+  color:var(--teal);background:var(--ink-2);border:2px solid var(--teal);border-radius:10px;padding:9px 12px;
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--teal) 14%,transparent),0 0 24px color-mix(in srgb,var(--teal) 22%,transparent);transition:transform .12s,background .12s}
+.why-btn:hover{background:var(--ink-3);transform:translateY(-2px)}
+.why-btn:active{transform:translateY(1px) scale(.98)}
+.why-btn .px{font-size:13px;flex:none}
+.why-btn .car{margin-left:auto;padding-left:6px;color:var(--text);font-size:13px;transition:transform .25s}
+.why-btn[aria-expanded="true"] .car{transform:rotate(45deg)}
+.why-body{margin-top:8px;font-size:13.5px;line-height:1.55;color:var(--text);background:var(--ink-2);border:2px solid var(--line);border-left:3px solid var(--teal);border-radius:10px;padding:10px 13px;transform-origin:top left}
+.why-body:not([hidden]){animation:whyOpen .35s cubic-bezier(.2,.9,.3,1.25)}
+@keyframes whyOpen{from{opacity:0;transform:translateY(-6px) scale(.96)}}
+@media (prefers-reduced-motion:no-preference){.why-btn.ping{animation:whyPing 2.4s ease-in-out 1s infinite}
+  @keyframes whyPing{0%,70%,100%{box-shadow:0 0 0 4px color-mix(in srgb,var(--teal) 14%,transparent),0 0 24px color-mix(in srgb,var(--teal) 22%,transparent)}85%{box-shadow:0 0 0 8px color-mix(in srgb,var(--teal) 24%,transparent),0 0 34px color-mix(in srgb,var(--teal) 45%,transparent)}}}
 .hint{font-family:var(--pixel);font-size:11px;letter-spacing:.08em;color:var(--muted)}
 .hint b{color:var(--amber);font-weight:400}
 .worlds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}
@@ -421,7 +432,10 @@ body.story-on .wrap{padding-bottom:150px}
     <span class="eyebrow">Player 1 · Ready</span>
     <div class="title-row">
       <h1 id="heroTitle">From the <span class="hl">mixing desk</span> to the <span class="hl2">product roadmap</span>.</h1>
-      <p class="why"><span class="why-k"><svg class="px" viewBox="0 0 8 8" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true"><rect x="3" y="0" width="2" height="2"/><rect x="0" y="2" width="8" height="1"/><rect x="1" y="3" width="6" height="1"/><rect x="2" y="4" width="4" height="1"/><rect x="1" y="5" width="6" height="1"/><rect x="1" y="6" width="2" height="1"/><rect x="5" y="6" width="2" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/></svg>WHY A GAME?</span>Video games were a big part of my childhood, and some of my best friendships started with them. They're still how I wind down after a week of being switched on, so I told my story as one.</p>
+      <div class="why" id="why">
+        <button class="why-btn ping" id="whyBtn" type="button" aria-expanded="false" aria-controls="whyBody"><svg class="px" viewBox="0 0 8 8" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true"><rect x="3" y="0" width="2" height="2"/><rect x="0" y="2" width="8" height="1"/><rect x="1" y="3" width="6" height="1"/><rect x="2" y="4" width="4" height="1"/><rect x="1" y="5" width="6" height="1"/><rect x="1" y="6" width="2" height="1"/><rect x="5" y="6" width="2" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/></svg><span>Why is my portfolio gamified?</span><span class="car" aria-hidden="true">+</span></button>
+        <p class="why-body" id="whyBody" hidden>Video games were a big part of my childhood, and some of my best friendships started with them. They're still how I wind down after a week of being switched on, so I told my story as one.</p>
+      </div>
     </div>
     <p class="lede">I'm <b>Thejus Nair</b>, a Product Manager who builds B2B and B2C products end to end, with 0-to-1 launches across growth, automation and workflow products. Before product, I spent 11 years in audio production, running content teams and my own studio.</p>
     <div class="cta-row">
@@ -1364,6 +1378,45 @@ $('#pressStart').addEventListener('click',()=>{ award('start'); sfx.select(); se
 $('#storyBtn').addEventListener('click',toggleStory);
 $('#storyBtn2').addEventListener('click',toggleStory);
 $('#hudQuest').addEventListener('click',()=>$('#quests').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'}));
+function revealChime(){
+  if(!S.sfx) return; const a = actx(); if(!a) return;
+  const t0 = a.currentTime + .02;
+  const out = a.createGain(); out.gain.value = .9;
+  const dl = a.createDelay(); dl.delayTime.value = .19; const fb = a.createGain(); fb.gain.value = .32;
+  const lp = a.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value = 4200;
+  out.connect(a.destination); out.connect(dl); dl.connect(lp); lp.connect(fb); fb.connect(dl); lp.connect(a.destination);
+  // whoosh
+  const len = Math.floor(a.sampleRate*.45), buf = a.createBuffer(1,len,a.sampleRate), d = buf.getChannelData(0);
+  for(let i=0;i<len;i++) d[i] = (Math.random()*2-1);
+  const nz = a.createBufferSource(); nz.buffer = buf;
+  const bp = a.createBiquadFilter(); bp.type='bandpass'; bp.Q.value = 1.4;
+  bp.frequency.setValueAtTime(500,t0); bp.frequency.exponentialRampToValueAtTime(6000,t0+.4);
+  const ng = a.createGain(); ng.gain.setValueAtTime(0,t0); ng.gain.linearRampToValueAtTime(.09,t0+.18); ng.gain.exponentialRampToValueAtTime(.0001,t0+.45);
+  nz.connect(bp); bp.connect(ng); ng.connect(out); nz.start(t0); nz.stop(t0+.46);
+  // bell voice: fundamental + inharmonic partial for a glassy tone
+  const bell = (f,t,dur,v)=>{
+    [[1,v,'sine'],[2.76,v*.35,'sine'],[4.07,v*.12,'sine'],[.5,v*.25,'triangle']].forEach(([m,g,ty],k)=>{
+      const o = a.createOscillator(), gg = a.createGain(); o.type = ty; o.frequency.value = f*m;
+      const dd = k===0 ? dur : dur*(k===3 ? .9 : .35);
+      gg.gain.setValueAtTime(0,t); gg.gain.linearRampToValueAtTime(g,t+.008); gg.gain.exponentialRampToValueAtTime(.0001,t+dd);
+      o.connect(gg); gg.connect(out); o.start(t); o.stop(t+dd+.05);
+    });
+  };
+  [587.3,740,880,1108.7,1318.5].forEach((f,i)=>bell(f,t0+.12+i*.065,.55,.075));
+  // final shimmer chord, slightly detuned pairs
+  const tc = t0 + .12 + 5*.065 + .02;
+  [1174.7,1480,1760].forEach((f,i)=>{ [0,4].forEach(c=>{
+    const o = a.createOscillator(), g = a.createGain(); o.type='sine'; o.frequency.value = f; o.detune.value = c;
+    g.gain.setValueAtTime(0,tc); g.gain.linearRampToValueAtTime(.032,tc+.02+i*.01); g.gain.exponentialRampToValueAtTime(.0001,tc+1.5);
+    o.connect(g); g.connect(out); o.start(tc); o.stop(tc+1.6); }); });
+  bell(293.7,tc,1.2,.06);
+}
+function closeTick(){ if(S.sfx){ tone(880,0,.06,'sine',.05); tone(587,.05,.09,'sine',.04); } }
+$('#whyBtn').addEventListener('click',()=>{
+  const b = $('#whyBtn'), body = $('#whyBody'), open = b.getAttribute('aria-expanded')!=='true';
+  b.setAttribute('aria-expanded', open ? 'true':'false'); body.hidden = !open; b.classList.remove('ping');
+  if(open) revealChime(); else closeTick();
+});
 $('#sfxBtn').addEventListener('click',()=>{ S.sfx = !S.sfx; save(); renderHUD(); if(S.sfx){ actx(); sfx.select(); } });
 $('#riffBtn').addEventListener('click',()=>{ playRiff(); award('beat'); });
 $('#newGame').addEventListener('click',()=>{ S = {xp:0, ach:[], visited:[], items:[], sfx:S.sfx}; save(); renderInventory(); renderQuestLog(); markNodes(); toast('lvl','New game+','Progress reset. Good luck, explorer.','play'); });
