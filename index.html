@@ -646,6 +646,7 @@ const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 /* ---------- Pixel icons ---------- */
 const ICONS = {
   trophy:[".XXXXXX.","XXXXXXXX","X.XXXX.X",".XXXXXX.","..XXXX..","...XX...","..XXXX..",".XXXXXX."],
+  web:["XXXXXXXX","X......X","X......X","X......X","XXXXXXXX","...XX...","..XXXX..","........"],
   app:["..XXXX..","..X..X..","..X..X..","..X..X..","..X..X..","..XXXX..","..XXXX..","..XXXX.."],
   proto:["X.......","XX......","XXX.....","XXXX....","XXXXX...","XXX.....","X.XX....","...XX..."],
   doc:[".XXXXX..",".X...XX.",".X.XX.X.",".X....X.",".X.XX.X.",".X....X.",".X.XX.X.",".XXXXXX."],
@@ -775,7 +776,7 @@ const LEVELS = [
      {d:'Sep 2026', v:'WattWealth 1.1.10', t:'Multi-site switching, so partners can support customers from one account. Documents reorganised into folders.'}
    ],
    moves:['Product ownership','B2B2C design','Prototyping','Engineering scoping','Data-driven decisions'],
-   items:['ww','solswift'], ach:'lv-boss' }
+   items:['ww','solswift','solswift-web'], ach:'lv-boss' }
 ];
 
 const ITEMS = [
@@ -787,6 +788,10 @@ const ITEMS = [
   desc:'The field app partner teams use to see scheduled jobs, follow layouts, complete checklists and capture photos that flow straight into the customer app.',
   tags:['Product ownership','Customer research','Competitive analysis'],
   links:[{label:'View on Google Play', url:'https://play.google.com/store/apps/details?id=com.wattwealth.SolSwift'}]},
+ {id:'solswift-web', name:'SolSwift Web', kind:'web', rarity:'legendary', type:'Shipped B2B web platform', domain:'Energy tech', level:6,
+  desc:'The web platform installer partners use to create customer quotes and manage projects from proposal to installation. A quote created here sets up the customer\'s app account automatically.',
+  tags:['Product ownership','B2B platform','Workflow design'],
+  links:[{label:'Open SolSwift Web', url:'https://portal.dseg.se'}]},
  {id:'vibe-proto', name:'VibeCheck prototype', kind:'proto', rarity:'epic', type:'Interactive prototype', domain:'Media', level:4,
   desc:'A clickable prototype of a mood-based music discovery feature for Spotify, built with React and deployed on Vercel.',
   tags:['Prototyping','Usability testing','UX research'],
@@ -821,7 +826,7 @@ const ITEMS = [
   links:[{label:'Open the folder', url:'https://drive.google.com/drive/folders/187ScE_1IQYcZsPbIBsEJp5PtC9--UiV2?usp=sharing'}]}
 ];
 const ITEM = Object.fromEntries(ITEMS.map(i=>[i.id,i]));
-const KIND_ICON = {app:'app',proto:'proto',doc:'doc',music:'music',folder:'folder'};
+const KIND_ICON = {web:'web',app:'app',proto:'proto',doc:'doc',music:'music',folder:'folder'};
 const RAR = {legendary:'LEGENDARY',epic:'EPIC',rare:'RARE',unique:'UNIQUE'};
 
 const SCORES = [
