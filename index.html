@@ -295,8 +295,12 @@ footer{margin-top:28px;text-align:center;font-family:var(--pixel);font-size:10.5
 footer button{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit;letter-spacing:inherit}
 
 /* ---------- Hints, worlds, rewards ---------- */
-.why{font-size:15.5px;color:var(--muted);max-width:62ch;border-left:3px solid var(--teal);padding-left:12px}
-.why b{color:var(--teal);font-weight:600}
+.title-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,290px);gap:24px;align-items:center}
+@media (max-width:860px){.title-row{grid-template-columns:minmax(0,1fr)}.why{max-width:420px}}
+.why{font-size:13.5px;line-height:1.5;color:var(--text);background:var(--ink-2);border:2px solid var(--teal);border-radius:10px;padding:10px 13px;transform:rotate(-1.5deg);justify-self:start;
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--teal) 14%,transparent),0 0 26px color-mix(in srgb,var(--teal) 22%,transparent)}
+.why .why-k{display:flex;align-items:center;gap:7px;font-family:var(--pixel);font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--teal);margin-bottom:4px}
+@media (prefers-reduced-motion:no-preference){.why{animation:whyIn .6s .3s both cubic-bezier(.2,.9,.3,1.3)}@keyframes whyIn{from{opacity:0;transform:rotate(-1.5deg) translateY(8px) scale(.96)}}}
 .hint{font-family:var(--pixel);font-size:11px;letter-spacing:.08em;color:var(--muted)}
 .hint b{color:var(--amber);font-weight:400}
 .worlds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}
@@ -415,14 +419,16 @@ body.story-on .wrap{padding-bottom:150px}
   <!-- HERO -->
   <section class="hero" aria-labelledby="heroTitle">
     <span class="eyebrow">Player 1 · Ready</span>
-    <h1 id="heroTitle">From the <span class="hl">mixing desk</span> to the <span class="hl2">product roadmap</span>.</h1>
+    <div class="title-row">
+      <h1 id="heroTitle">From the <span class="hl">mixing desk</span> to the <span class="hl2">product roadmap</span>.</h1>
+      <p class="why"><span class="why-k"><svg class="px" viewBox="0 0 8 8" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true"><rect x="3" y="0" width="2" height="2"/><rect x="0" y="2" width="8" height="1"/><rect x="1" y="3" width="6" height="1"/><rect x="2" y="4" width="4" height="1"/><rect x="1" y="5" width="6" height="1"/><rect x="1" y="6" width="2" height="1"/><rect x="5" y="6" width="2" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/></svg>WHY A GAME?</span>Video games were a big part of my childhood, and some of my best friendships started with them. They're still how I wind down after a week of being switched on, so I told my story as one.</p>
+    </div>
     <p class="lede">I'm <b>Thejus Nair</b>, a Product Manager who builds B2B and B2C products end to end, with 0-to-1 launches across growth, automation and workflow products. Before product, I spent 11 years in audio production, running content teams and my own studio.</p>
     <div class="cta-row">
       <button class="btn" id="pressStart" type="button"><span id="icoPlay"></span>Press start</button>
       <button class="btn ghost" id="storyBtn" type="button" aria-pressed="false">Story mode</button>
       <a class="btn ghost" href="#save">Get my CV</a>
     </div>
-    <p class="why"><b>Why a game?</b> Video games were a big part of my childhood, and some of my best friendships started with them. They're still how I wind down on weekends after a week of being switched on, so it felt natural to tell my story as one.</p>
     <p class="hint">Explore to earn <b>XP</b> and unlock <b>15 achievements</b>. Your progress fills the bar at the top of the page.</p>
     <div class="wave" aria-hidden="true">
       <canvas id="wave"></canvas>
